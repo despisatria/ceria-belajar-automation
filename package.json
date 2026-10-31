@@ -1,0 +1,33 @@
+{
+  "name": "ceria-belajar-automation",
+  "version": "1.0.0",
+  "description": "End-to-end test automation for Ceria Belajar, a kids' learning PWA, built with Playwright and TypeScript",
+  "private": true,
+  "scripts": {
+    "test": "playwright test",
+    "test:smoke": "playwright test --grep @smoke",
+    "test:regression": "playwright test --grep @regression",
+    "test:mobile": "playwright test --project=mobile",
+    "test:local": "cross-env APP_DIR=../ceria-belajar playwright test",
+    "test:headed": "playwright test --headed",
+    "test:ui": "playwright test --ui",
+    "typecheck": "tsc --noEmit",
+    "allure:report": "allure generate allure-results --clean -o allure-report && allure open allure-report"
+  },
+  "keywords": [
+    "playwright",
+    "e2e",
+    "test-automation",
+    "pwa"
+  ],
+  "author": "Desphi Satria Nurjaya",
+  "license": "MIT",
+  "devDependencies": {
+    "@axe-core/playwright": "^4.14.0",
+    "@playwright/test": "^1.64.1",
+    "@types/node": "^26.6.6",
+    "allure-playwright": "^3.14.0",
+    "cross-env": "^10.1.0",
+    "typescript": "^7.0.2"
+  }
+}
