@@ -1,4 +1,5 @@
 import { expect, type Locator, type Page } from '@playwright/test';
+import { CollectionModal } from '../components/CollectionModal';
 import { ConfirmModal } from '../components/ConfirmModal';
 
 export const CATEGORIES = [
@@ -15,6 +16,8 @@ export const CATEGORIES = [
 
 export class HomePage {
   readonly modal: ConfirmModal;
+  readonly medalCollection: CollectionModal;
+  readonly starCollection: CollectionModal;
 
   readonly welcomeStartButton: Locator;
   readonly profileChip: Locator;
@@ -28,6 +31,8 @@ export class HomePage {
 
   constructor(private readonly page: Page) {
     this.modal = new ConfirmModal(page);
+    this.medalCollection = new CollectionModal(page, 'badge');
+    this.starCollection = new CollectionModal(page, 'star');
 
     this.welcomeStartButton = page.getByRole('button', { name: /MULAI/ });
     this.profileChip = page.getByRole('button', { name: 'Ganti profil' });
@@ -61,6 +66,18 @@ export class HomePage {
     await expect(this.welcomeGreeting(name)).toBeVisible();
     await this.welcomeStartButton.click();
     await expect(this.welcomeGreeting(name)).toBeHidden();
+  }
+
+  async openMedalCollection(): Promise<CollectionModal> {
+    await this.medalButton.click();
+    await this.medalCollection.expectOpen();
+    return this.medalCollection;
+  }
+
+  async openStarCollection(): Promise<CollectionModal> {
+    await this.starButton.click();
+    await this.starCollection.expectOpen();
+    return this.starCollection;
   }
 
   async switchPlayer(): Promise<void> {
