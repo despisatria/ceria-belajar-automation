@@ -14,5 +14,6 @@ const appDir = process.env.APP_DIR ? path.resolve(process.env.APP_DIR) : undefin
 export const env = {
   appDir,
   isLocal: !!appDir,
-  baseURL: process.env.BASE_URL ?? (appDir ? LOCAL_URL : PRODUCTION_URL),
+  // `||` rather than `??`: CI passes an empty BASE_URL when no override is given.
+  baseURL: process.env.BASE_URL || (appDir ? LOCAL_URL : PRODUCTION_URL),
 };
