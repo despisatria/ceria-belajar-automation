@@ -9,7 +9,7 @@ End-to-end test automation for **[Ceria Belajar](https://ceria-belajar.pages.dev
 
 | | |
 |---|---|
-| 🧪 **72 test runs** | 67 test cases on desktop, plus core flows repeated on a mobile viewport |
+| 🧪 **72 test runs** | 68 test cases on desktop, plus 4 core flows repeated on a mobile viewport |
 | 🐞 **3 bugs found and fixed** | in the medal and star system, plus accessibility gaps fixed along the way ([details](#bugs-found)) |
 | 📊 **Live report** | https://despisatria.github.io/ceria-belajar-automation/ |
 
@@ -204,7 +204,7 @@ The app has no backend: every child profile, medal and star lives in the browser
 
 | Area | Tests | What is checked |
 |---|---|---|
-| **Profiles** | 20 (+5 on mobile) | create, uppercase name, 10-character limit, trimming, empty and blank names, avatar choice by mouse and keyboard, staying signed in after a reload, switching player, choosing, editing, cancelling, deleting, deleting the last profile, the 6-profile limit |
+| **Profiles** | 21 (+4 on mobile) | create, uppercase name, 10-character limit, trimming, empty and blank names, avatar choice by mouse and keyboard, staying signed in after a reload, switching player, choosing, editing, cancelling, deleting, deleting the last profile, the 6-profile limit |
 | **Medals** | 37 | each of the 32 collection medals is awarded by exactly its own progress, the threshold boundary, the Home counter against the collection, the category filter, closing the modal |
 | **Stars** | 10 | single-level games, rolling 3 levels up into overall stars, the same stars on the game menu and on Home, the category filter |
 
