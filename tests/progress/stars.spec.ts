@@ -1,5 +1,4 @@
 import { expect, test } from '../../src/fixtures';
-import { knownBug, type KnownBugId } from '../../src/data/known-bugs';
 import { buildProfile } from '../../src/data/profiles';
 import { CategoryMenuPage } from '../../src/pages/CategoryMenuPage';
 import { documentTest } from '../../src/utils/report';
@@ -92,8 +91,8 @@ test.describe('Progress - Stars', { tag: ['@progress'] }, () => {
   // The same progress must show the same stars on the game's menu card and in the Home collection.
   const CONSISTENCY = [
     { category: 'Membaca', menu: '/membaca', card: 'Tebak Kata', progressKey: 'game_tebak_kata', starId: 'tebak_kata' },
-    { category: 'Berhitung', menu: '/matematika', card: 'Kuis Tambah Apel', progressKey: 'game_kuis_tambah', starId: 'kuis_tambah', knownBug: 'BUG-003' as KnownBugId },
-    { category: 'Berhitung', menu: '/matematika', card: 'Kuis Kurang Kue', progressKey: 'game_kuis_kurang', starId: 'kuis_kurang', knownBug: 'BUG-003' as KnownBugId },
+    { category: 'Berhitung', menu: '/matematika', card: 'Kuis Tambah Apel', progressKey: 'game_kuis_tambah', starId: 'kuis_tambah' },
+    { category: 'Berhitung', menu: '/matematika', card: 'Kuis Kurang Kue', progressKey: 'game_kuis_kurang', starId: 'kuis_kurang' },
   ];
   for (const game of CONSISTENCY) {
     test(`should show the same stars for "${game.card}" on the ${game.category} menu and on Home`, { tag: ['@regression'] }, async ({ page, homePage }) => {
@@ -103,9 +102,7 @@ test.describe('Progress - Stars', { tag: ['@progress'] }, () => {
           `With 5 level stars (3 + 2), the "${game.card}" card on the ${game.category} menu and the "Koleksi Bintang" entry on Home show the same number of stars`,
           '5 is the boundary where the two star calculations in the app could disagree',
         ],
-        knownBug: game.knownBug && knownBug(game.knownBug),
       });
-      if (game.knownBug) test.fail(true, knownBug(game.knownBug));
 
       const progress = { [game.progressKey]: { level1: { score: 100, stars: 3 }, level2: { score: 80, stars: 2 } } };
       const profile = buildProfile({ progress });
