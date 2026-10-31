@@ -37,13 +37,13 @@ More areas (navigation smoke over every route, games, backup/restore, PWA offlin
 
 ## Bugs found
 
-Found by this suite and tracked in [`src/data/known-bugs.ts`](src/data/known-bugs.ts):
+Found by this suite. Open bugs are tracked in [`src/data/known-bugs.ts`](src/data/known-bugs.ts); when a fix ships, its `test.fail()` mark is removed and the tests become ordinary regression tests.
 
-| ID | Bug | Impact |
-|---|---|---|
-| **BUG-001** | The medal collection marks the wrong medal as earned for Hijaiyah, Membaca, Berhitung and Bahasa Inggris (e.g. finishing *Huruf Hijaiyah* unlocks *Suku Kata Dasar*). | 19 of 32 medals show the wrong reward to the child. |
-| **BUG-002** | The Home medal counter skips the *Campur Warna* medal. | Counter shows 31 when all 32 are earned. |
-| **BUG-003** | Berhitung games give 2 overall stars from 5 level stars; Home needs 6. | The same child sees 2 stars on the menu and 1 on Home. |
+| ID | Bug | Impact | Status |
+|---|---|---|---|
+| **BUG-001** | The medal collection marks the wrong medal as earned for Hijaiyah, Membaca, Berhitung and Bahasa Inggris (e.g. finishing *Huruf Hijaiyah* unlocks *Suku Kata Dasar*). | 19 of 32 medals show the wrong reward to the child. | Fixed in app v1.18.1 |
+| **BUG-002** | The Home medal counter skips the *Campur Warna* medal. | Counter shows 31 when all 32 are earned. | Fixed in app v1.18.1 |
+| **BUG-003** | Berhitung games give 2 overall stars from 5 level stars; Home needs 6. | The same child sees 2 stars on the menu and 1 on Home. | Open |
 
 Writing the tests also surfaced **testability and accessibility gaps** in the app, fixed in the app repo before these tests were written:
 profile cards, avatar choices and dashboard buttons were plain `div`s with click handlers (no keyboard or screen-reader support), the confirm modal was not exposed as a dialog, and the manage-profiles animation ignored `prefers-reduced-motion`.

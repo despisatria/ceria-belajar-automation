@@ -85,9 +85,7 @@ test.describe('Progress - Medals', { tag: ['@progress'] }, () => {
     await documentTest({
       feature, story: 'Medal collection',
       verifies: [`With every medal earned, the collection reads ${TOTAL_BADGES}/${TOTAL_BADGES} and the Home counter shows ${TOTAL_BADGES}`],
-      knownBug: knownBug('BUG-002'),
     });
-    test.fail(true, knownBug('BUG-002'));
 
     const allProgress = BADGES.reduce<Record<string, Record<string, unknown>>>((acc, { progress }) => {
       for (const [key, value] of Object.entries(progress)) {
