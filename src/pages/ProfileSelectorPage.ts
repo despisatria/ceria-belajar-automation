@@ -1,5 +1,6 @@
 import { expect, type Locator, type Page } from '@playwright/test';
 import { ConfirmModal } from '../components/ConfirmModal';
+import { step } from '../utils/report';
 
 /** The "who is playing" gate shown before the app, plus the create/edit profile form. */
 export class ProfileSelectorPage {
@@ -40,7 +41,7 @@ export class ProfileSelectorPage {
   }
 
   async goto(): Promise<void> {
-    await this.page.goto('/');
+    await step('Open the app', () => this.page.goto('/').then(() => undefined));
   }
 
   profileCard(name: string): Locator {
@@ -52,25 +53,38 @@ export class ProfileSelectorPage {
   }
 
   async fillProfileForm(name: string, avatarUrl?: string): Promise<void> {
-    await this.nameInput.fill(name);
-    if (avatarUrl) await this.avatarOption(avatarUrl).click();
+    await step(`Type name "${name}"${avatarUrl ? ` and pick avatar ${avatarLabel(avatarUrl)}` : ''}`, async () => {
+      await this.nameInput.fill(name);
+      if (avatarUrl) await this.avatarOption(avatarUrl).click();
+    });
   }
 
   async createProfile(name: string, avatarUrl?: string): Promise<void> {
-    await expect(this.createHeading).toBeVisible();
-    await this.fillProfileForm(name, avatarUrl);
-    await this.submitButton.click();
+    await step(`Create profile "${name}"${avatarUrl ? ` with avatar ${avatarLabel(avatarUrl)}` : ''}`, async () => {
+      await expect(this.createHeading, 'the create-profile form is shown').toBeVisible();
+      await this.fillProfileForm(name, avatarUrl);
+      await this.submitButton.click();
+    });
   }
 
   async selectProfile(name: string): Promise<void> {
-    await this.profileCard(name).click();
-    await this.modal.expectOpen('Pilih Pemain', `Mulai bermain sebagai ${name}?`);
-    await this.modal.confirm('Ya, Mulai!');
+    await step(`Start playing as ${name}`, async () => {
+      await this.profileCard(name).click();
+      await this.modal.expectOpen('Pilih Pemain', `Mulai bermain sebagai ${name}?`);
+      await this.modal.confirm('Ya, Mulai!');
+    });
   }
 
   async openEditForm(name: string): Promise<void> {
-    await this.manageButton.click();
-    await this.profileCard(name).click();
-    await expect(this.editHeading).toBeVisible();
+    await step(`Open the edit form for ${name} via "Atur Profil"`, async () => {
+      await this.manageButton.click();
+      await this.profileCard(name).click();
+      await expect(this.editHeading, 'the edit-profile form is shown').toBeVisible();
+    });
   }
+}
+
+/** '/images/avatar/avatar-singa.webp' -> 'singa' */
+function avatarLabel(url: string): string {
+  return url.replace(/^.*avatar-/, '').replace(/\.webp$/, '');
 }

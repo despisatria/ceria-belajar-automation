@@ -1,5 +1,6 @@
 import type { Page } from '@playwright/test';
 import type { ChildProfile } from '../data/profiles';
+import { step } from './report';
 
 /** localStorage keys used by the app. */
 export const STORAGE_KEYS = {
@@ -20,7 +21,7 @@ export interface SeedState {
  * otherwise a reload would wipe what the test just did in the UI.
  */
 export async function seedStorage(page: Page, state: SeedState): Promise<void> {
-  await page.addInitScript(
+  await step(describeSeed(state), () => page.addInitScript(
     ({ keys, state }) => {
       if (localStorage.getItem('__qa_seeded__')) return;
       localStorage.setItem('__qa_seeded__', 'true');
@@ -29,7 +30,19 @@ export async function seedStorage(page: Page, state: SeedState): Promise<void> {
       localStorage.setItem(keys.musicMuted, String(state.musicMuted ?? true));
     },
     { keys: STORAGE_KEYS, state },
-  );
+  ));
+}
+
+/** e.g. 'Given saved data: 2 profiles (ANI, BUDI), BUDI signed in, progress in game_kuis_tambah' */
+function describeSeed({ profiles = [], activeProfileId }: SeedState): string {
+  if (profiles.length === 0) return 'Given a first-time visitor (no saved profiles)';
+  const names = profiles.map((p) => p.name).join(', ');
+  const active = profiles.find((p) => p.id === activeProfileId);
+  const progressKeys = [...new Set(profiles.flatMap((p) => Object.keys(p.progress)))];
+  const parts = [`${profiles.length} profile${profiles.length > 1 ? 's' : ''} (${names})`];
+  parts.push(active ? `${active.name} signed in` : 'nobody signed in');
+  if (progressKeys.length) parts.push(`progress in ${progressKeys.join(', ')}`);
+  return `Given saved data: ${parts.join(', ')}`;
 }
 
 export async function readProfiles(page: Page): Promise<ChildProfile[]> {

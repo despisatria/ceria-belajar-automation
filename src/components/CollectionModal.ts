@@ -38,6 +38,6 @@ export class CollectionModal {
   }
 
   async expectOpen(): Promise<void> {
-    await expect(this.heading).toBeVisible();
+    await expect(this.heading, `the "${this.kind === 'badge' ? 'Koleksi Medali' : 'Koleksi Bintang'}" modal is open`).toBeVisible();
   }
 }

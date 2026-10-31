@@ -1,6 +1,7 @@
 import { expect, type Locator, type Page } from '@playwright/test';
 import { CollectionModal } from '../components/CollectionModal';
 import { ConfirmModal } from '../components/ConfirmModal';
+import { step } from '../utils/report';
 
 export const CATEGORIES = [
   { title: 'Dunia Alfabet', path: '/alfabet' },
@@ -46,7 +47,7 @@ export class HomePage {
   }
 
   async goto(): Promise<void> {
-    await this.page.goto('/');
+    await step('Open Home', () => this.page.goto('/').then(() => undefined));
   }
 
   welcomeGreeting(name: string): Locator {
@@ -58,31 +59,41 @@ export class HomePage {
   }
 
   async expectSignedInAs(name: string): Promise<void> {
-    await expect(this.profileChip).toBeVisible();
-    await expect(this.profileChip).toContainText(name);
+    await step(`Home shows ${name} as the active player`, async () => {
+      await expect(this.profileChip, 'the profile chip is shown on Home').toBeVisible();
+      await expect(this.profileChip, `the profile chip shows "${name}"`).toContainText(name);
+    });
   }
 
   async dismissWelcome(name: string): Promise<void> {
-    await expect(this.welcomeGreeting(name)).toBeVisible();
-    await this.welcomeStartButton.click();
-    await expect(this.welcomeGreeting(name)).toBeHidden();
+    await step(`Greeting "Halo, ${name}!" appears and is closed with MULAI`, async () => {
+      await expect(this.welcomeGreeting(name), `the greeting "Halo, ${name}!" is shown`).toBeVisible();
+      await this.welcomeStartButton.click();
+      await expect(this.welcomeGreeting(name), 'the greeting is closed').toBeHidden();
+    });
   }
 
   async openMedalCollection(): Promise<CollectionModal> {
-    await this.medalButton.click();
-    await this.medalCollection.expectOpen();
+    await step('Open "Koleksi Medali"', async () => {
+      await this.medalButton.click();
+      await this.medalCollection.expectOpen();
+    });
     return this.medalCollection;
   }
 
   async openStarCollection(): Promise<CollectionModal> {
-    await this.starButton.click();
-    await this.starCollection.expectOpen();
+    await step('Open "Koleksi Bintang"', async () => {
+      await this.starButton.click();
+      await this.starCollection.expectOpen();
+    });
     return this.starCollection;
   }
 
   async switchPlayer(): Promise<void> {
-    await this.profileChip.click();
-    await this.modal.expectOpen('Ganti Pemain', 'Apakah kamu yakin ingin keluar dan ganti pemain?');
-    await this.modal.confirm('Ya, Keluar');
+    await step('Switch player from Home', async () => {
+      await this.profileChip.click();
+      await this.modal.expectOpen('Ganti Pemain', 'Apakah kamu yakin ingin keluar dan ganti pemain?');
+      await this.modal.confirm('Ya, Keluar');
+    });
   }
 }

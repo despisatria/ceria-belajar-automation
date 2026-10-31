@@ -19,7 +19,7 @@ The app has no backend: every child profile, medal and star lives in the browser
 |---|---|
 | **Seed state through `localStorage`** instead of clicking through the UI | A test that checks the "Huruf Hijaiyah" medal should not have to play 30 letters first. Seeding the exact data shape the app writes makes tests fast and isolated, and lets one test cover each of the 32 medals. |
 | **The UI is still tested end-to-end where it matters** | Profile creation, selection, editing and deletion run through the real screens, because that is what a parent actually does first. |
-| **Run against production by default** | It is a static site with no server-side data, so tests cannot pollute anything. A daily scheduled run catches regressions from deploys made outside this repo. |
+| **Run against production by default** | It is a static site with no server-side data, so tests cannot pollute anything. |
 | **Local mode for unreleased changes** | `APP_DIR=../ceria-belajar` builds the app and serves it with `vite preview`, so a branch is tested before it ships. |
 | **Accessible locators first** (`getByRole`, `getByLabel`) | Locators that a screen reader could use are both stable and a check that the app is usable without a mouse. Where the app fell short, I fixed the app (see below) instead of falling back to CSS selectors. |
 | **Known bugs are `test.fail()`, not skipped** | The suite stays green while a bug is open, and turns red ("expected to fail, but passed") the moment a fix ships, so the marker never goes stale. |
@@ -66,7 +66,9 @@ npm run allure:report     # build and open the Allure report
 
 ## CI
 
-[`.github/workflows/e2e.yml`](.github/workflows/e2e.yml) runs on every push and pull request, daily at 06:00 WIB, and on demand (with optional target URL and tag filter). On `main` it publishes the Allure report to GitHub Pages and carries the report history forward, so trends build up across runs.
+[`.github/workflows/e2e.yml`](.github/workflows/e2e.yml) runs on every push and pull request, and on demand from the Actions tab (**Run workflow**) with an optional target URL, tag and spec. Each run writes a results table to the job summary. On `main` it publishes the Allure report to GitHub Pages and carries the report history forward, so trends build up across runs.
+
+In the Allure report every test carries a plain-language description of what it verifies, is grouped by feature and story, and reads as Given / When / Then steps, with each check named after what it confirms.
 
 ## Structure
 

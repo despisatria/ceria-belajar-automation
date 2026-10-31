@@ -1,4 +1,5 @@
 import { expect, type Locator, type Page } from '@playwright/test';
+import { step } from '../utils/report';
 
 /** The app's shared ConfirmModal (src/components/ui/ConfirmModal.tsx), also used for alerts. */
 export class ConfirmModal {
@@ -13,16 +14,18 @@ export class ConfirmModal {
   }
 
   async expectOpen(title: string | RegExp, message?: string | RegExp): Promise<void> {
-    await expect(this.dialog).toBeVisible();
-    await expect(this.dialog).toHaveAccessibleName(title);
-    if (message) await expect(this.dialog.getByText(message)).toBeVisible();
+    await step(`Dialog "${title}" is shown`, async () => {
+      await expect(this.dialog, `a dialog is open`).toBeVisible();
+      await expect(this.dialog, `the dialog is titled "${title}"`).toHaveAccessibleName(title);
+      if (message) await expect(this.dialog.getByText(message), `the dialog says "${message}"`).toBeVisible();
+    });
   }
 
   async confirm(label: string | RegExp): Promise<void> {
-    await this.dialog.getByRole('button', { name: label }).click();
+    await step(`Click "${label}" in the dialog`, () => this.dialog.getByRole('button', { name: label }).click());
   }
 
   async cancel(label: string | RegExp = 'Batal'): Promise<void> {
-    await this.dialog.getByRole('button', { name: label }).click();
+    await step(`Click "${label}" in the dialog`, () => this.dialog.getByRole('button', { name: label }).click());
   }
 }

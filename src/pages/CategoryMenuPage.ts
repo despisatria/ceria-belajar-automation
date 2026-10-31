@@ -1,4 +1,5 @@
 import { expect, type Locator, type Page } from '@playwright/test';
+import { step } from '../utils/report';
 
 /** A category menu (e.g. /matematika) with its Belajar / Latihan tabs and activity cards. */
 export class CategoryMenuPage {
@@ -15,8 +16,10 @@ export class CategoryMenuPage {
   }
 
   async goto(path: string): Promise<void> {
-    await this.page.goto(path);
-    await expect(this.backButton).toBeVisible();
+    await step(`Open the ${path} menu`, async () => {
+      await this.page.goto(path);
+      await expect(this.backButton, 'the menu has loaded').toBeVisible();
+    });
   }
 
   card(title: string): Locator {
@@ -25,13 +28,17 @@ export class CategoryMenuPage {
 
   /** Number of lit stars on a game card's star badge. */
   async cardStars(title: string): Promise<number> {
-    const badge = this.card(title).getByTitle('Pencapaian Bintang');
-    await expect(badge).toBeVisible();
-    return badge.locator('.star-active').count();
+    return step(`Read the stars on the "${title}" card`, async () => {
+      const badge = this.card(title).getByTitle('Pencapaian Bintang');
+      await expect(badge, `the "${title}" card shows its star badge`).toBeVisible();
+      return badge.locator('.star-active').count();
+    });
   }
 
   async openLatihan(): Promise<void> {
-    await this.latihanTab.click();
-    await expect(this.latihanTab).toHaveClass(/active/);
+    await step('Switch to the "Latihan" tab', async () => {
+      await this.latihanTab.click();
+      await expect(this.latihanTab, 'the Latihan tab is active').toHaveClass(/active/);
+    });
   }
 }
